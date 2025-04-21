@@ -41,28 +41,27 @@ export default function Navbar() {
   const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Handle scroll event to change navbar style
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Smooth scroll function
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     setMenuOpen(false);
     const element = document.querySelector(id);
     if (element) {
-      const offset = 100; // Offset to account for the navbar height
+      const offset = 100;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -74,6 +73,10 @@ export default function Navbar() {
       });
     }
   };
+
+  const logoSrc = theme === MODE_TYPE.DARK
+    ? "/asset/my-logo-dark-mode.png"
+    : "/asset/my-logo-light-mode.png";
 
   return (
     <header
@@ -89,12 +92,15 @@ export default function Navbar() {
           href="/"
           className="text-3xl font-bold tracking-tight text-foreground transition-colors"
         >
-          <Image
-            src={theme === MODE_TYPE.DARK ? "/asset/my-logo-dark-mode.png" : "/asset/my-logo-light-mode.png"}
-            alt="my_logo"
-            width={100}
-            height={50}
-          />
+          {mounted && (
+            <Image
+              src={logoSrc}
+              alt="my_logo"
+              width={100}
+              height={50}
+              priority
+            />
+          )}
         </Link>
 
         {/* Desktop Navigation */}
