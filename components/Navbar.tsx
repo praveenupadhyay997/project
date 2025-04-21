@@ -7,6 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useTheme } from "next-themes";
+
+enum MODE_TYPE {
+  DARK = 'dark',
+  LIGHT = 'light'
+}
 
 const navItems = [
   {
@@ -32,6 +38,7 @@ const navItems = [
 ];
 
 export default function Navbar() {
+  const { theme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -83,7 +90,7 @@ export default function Navbar() {
           className="text-3xl font-bold tracking-tight text-foreground transition-colors"
         >
           <Image
-            src="/asset/my-logo.png"
+            src={theme === MODE_TYPE.DARK ? "/asset/my-logo-dark-mode.png" : "/asset/my-logo-light-mode.png"}
             alt="my_logo"
             width={100}
             height={50}
